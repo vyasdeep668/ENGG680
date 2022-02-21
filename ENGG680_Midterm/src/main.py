@@ -1,7 +1,7 @@
 # Course: ENGG 680 Intro to Digital Engineering
 # Midterm Project
-# File: webscrap.py
-# Group Members: Deep Vyas, Aditya Porwal, Sparsh Mehta, Anand Kulkarni
+# File: main.py
+# Group Members: Deep Vyas, Aditya Porwal, Sparsh Mehta, Anand Kulkarni, Dipesh Puri
 
 import concurrent.futures
 import pandas as pd
