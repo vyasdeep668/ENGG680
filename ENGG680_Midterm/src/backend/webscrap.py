@@ -10,6 +10,12 @@ import pandas as pd
 
 
 def get_faculty_data():
+    """Returns panda dataframe of faculty information from website
+    :param: None
+    :type: None
+    :rtype: panda dataframe object
+    :return: panda dataframe of faculty information from website
+    """
     url = "https://schulich.ucalgary.ca"
     faculty_url = url + "/electrical-computer/faculty-members"
     response = requests.get(faculty_url)
@@ -37,17 +43,23 @@ def get_faculty_data():
 
 
 def get_prof_data(prof_url):
-    # email_pattern = re.compile("\w+@\w+.ca")
-    location_pattern = re.compile("[A-Z][A-Z][A-Z].*[0-9]+")
-    phonenumber_pattern = re.compile("[0-9][0-9][0-9].*[0-9][0-9][0-9].*[0-9][0-9][0-9][0-9]")
+    """Returns phone number and location of faculty from website
+    :param: prof_url
+    :type: string
+    :rtype: tuple (phone_number, location)
+    :return: phone number and location of faculty from website
+    """
+    # email_pattern = re.compile(r"\w+@\w+.ca")
+    location_pattern = re.compile(r'\w+ ?\d+\w?')
+    phonenumber_pattern = re.compile(r'\d{3}[.-]\d{3}[.-]\d{4}')
     phone_number = None
     location = None
     response = requests.get(prof_url)
     soup = BeautifulSoup(response.text, "html.parser")  # "lxml")
     for prof_contact_info in soup.find("div", class_='col-md-8 contact-section').find_all('a'):
-        if len(re.findall(phonenumber_pattern, prof_contact_info.text)):
+        if re.match(phonenumber_pattern, prof_contact_info.text):
             phone_number = prof_contact_info.text
-        elif len(re.findall(location_pattern, prof_contact_info.text)):
+        elif re.match(location_pattern, prof_contact_info.text):
             location = prof_contact_info.text
 
     return phone_number, location
