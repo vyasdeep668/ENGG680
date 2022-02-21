@@ -28,7 +28,7 @@ def main():
             prof_additional_info_list.append([phone_number, location])
 
     df[['contact', 'location']] = pd.DataFrame(prof_additional_info_list)
-    df.to_csv(path_or_buf='C:/Users/vyasd/Desktop/ENGG680/ENGG680_Midterm/data/uofc_prof.csv', index=True)
+    df.to_csv(path_or_buf='../data/uofc_prof.csv', index=True)
 
     title_list = ['Assistant Professor', 'Professor', 'Senior Instructor', 'Instructor', 'Associate Professor']
     for title in title_list:
