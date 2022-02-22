@@ -7,23 +7,25 @@ import concurrent.futures
 import pandas as pd
 from backend import webscrap
 import time
+from tqdm import tqdm
 
-MULTI_THREDING = True   # False
+MULTI_THREDING = True   # True/False
 
 
 def main():
     print("Working...\nMultithreading: ", MULTI_THREDING)
+    print("Fetching Data.......")
     df = webscrap.get_faculty_data()
     prof_url_list = df['homepage'].to_list()
     prof_additional_info_list = []
 
     if MULTI_THREDING:
         with concurrent.futures.ThreadPoolExecutor() as executor:
-            results = executor.map(webscrap.get_prof_data, prof_url_list)
+            results = list(tqdm(executor.map(webscrap.get_prof_data, prof_url_list), total=len(prof_url_list)))
             for result in results:
                 prof_additional_info_list.append([result[0], result[1]])
     else:
-        for prof_url in prof_url_list:
+        for prof_url in tqdm(prof_url_list):
             phone_number, location = webscrap.get_prof_data(prof_url)
             prof_additional_info_list.append([phone_number, location])
 
@@ -39,4 +41,7 @@ if __name__ == "__main__":
     start = time.perf_counter()
     main()
     end = time.perf_counter()
-    print('Total operation execution time with multithreading: {:.2f}'.format(end-start), 'seconds')
+    if MULTI_THREDING:
+        print('Total operation execution time with multithreading: {:.2f}'.format(end-start), 'seconds')
+    else:
+        print('Total operation execution time without multithreading: {:.2f}'.format(end - start), 'seconds')
