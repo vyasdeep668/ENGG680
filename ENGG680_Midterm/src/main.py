@@ -14,15 +14,14 @@ MULTI_THREDING = True   # True/False
 
 def main():
     font_color = '\033[92m' if MULTI_THREDING else '\033[91m'
-    print('\033[1m' + font_color + "Multithreading: " + str(MULTI_THREDING) + '\033[0m' + '\nFetching Data...')
+    print('\033[1m' + font_color + "Multithreading: " + str(MULTI_THREDING) + '\033[0m' + '\nFetching Data from https://schulich.ucalgary.ca/contacts/...')
     df = webscrap.get_faculty_data()
     prof_url_list = df['homepage'].to_list()
     prof_additional_info_list = []
 
     if MULTI_THREDING:
-
         with concurrent.futures.ThreadPoolExecutor() as executor:
-            results = list(tqdm(executor.map(webscrap.get_prof_data, prof_url_list), total=len(prof_url_list)))
+            results = list(tqdm(executor.map(webscrap.get_prof_data, prof_url_list), total=len(prof_url_list), colour='green'))
             for result in results:
                 prof_additional_info_list.append([result[0], result[1]])
     else:
