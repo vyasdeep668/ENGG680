@@ -7,6 +7,10 @@ import requests
 from bs4 import BeautifulSoup
 import re
 import pandas as pd
+import time
+
+MAX_RETRIES = 3
+WAIT_SECONDS = 5
 
 
 def get_faculty_data():
@@ -18,7 +22,19 @@ def get_faculty_data():
     """
     url = "https://schulich.ucalgary.ca"
     faculty_url = url + "/electrical-computer/faculty-members"
-    response = requests.get(faculty_url)
+    for count in range(MAX_RETRIES):
+        try:
+            response = requests.get(faculty_url, timeout=20)
+            response.raise_for_status()
+        except requests.exceptions.RequestException as error:
+            count = count + 1
+            if count == MAX_RETRIES:
+                print("Check Internet Connection!!")
+                raise SystemExit(error)
+            else:
+                print("Connecting...")
+                time.sleep(WAIT_SECONDS)
+
     soup = BeautifulSoup(response.text, "html.parser")  # "lxml")
     database = []
     count = 1
@@ -54,7 +70,11 @@ def get_prof_data(prof_url):
     phonenumber_pattern = re.compile(r'\d{3}[.-]\d{3}[.-]\d{4}')
     phone_number = None
     location = None
-    response = requests.get(prof_url)
+    try:
+        response = requests.get(prof_url, timeout=20)
+        response.raise_for_status()
+    except requests.exceptions.RequestException as error:
+        raise SystemExit(error)
     soup = BeautifulSoup(response.text, "html.parser")  # "lxml")
     for prof_contact_info in soup.find("div", class_='col-md-8 contact-section').find_all('a'):
         if re.match(phonenumber_pattern, prof_contact_info.text):
