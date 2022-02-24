@@ -14,7 +14,8 @@ MULTI_THREDING = True   # True/False
 
 def main():
     font_color = '\033[92m' if MULTI_THREDING else '\033[91m'
-    print('\033[1m' + font_color + "Multithreading: " + str(MULTI_THREDING) + '\033[0m' + '\nFetching Data from https://schulich.ucalgary.ca/contacts/...')
+    print('\033[1m' + font_color + "Multithreading: " + str(MULTI_THREDING) + '\033[0m' +
+          '\nFetching Data from https://schulich.ucalgary.ca/contacts/...')
     df = webscrap.get_faculty_data()
     prof_url_list = df['homepage'].to_list()
     prof_additional_info_list = []
@@ -45,3 +46,4 @@ if __name__ == "__main__":
         print('Total operation execution time with multithreading: {:.2f}'.format(end-start), 'seconds')
     else:
         print('Total operation execution time without multithreading: {:.2f}'.format(end - start), 'seconds')
+

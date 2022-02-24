@@ -37,23 +37,14 @@ def get_faculty_data():
 
     soup = BeautifulSoup(response.text, "html.parser")  # "lxml")
     database = []
-    count = 1
-    data = []
-    for prof in soup.find("div", class_='row profiles').find_all('p'):
-        if count == 3:
-            database.append(data)
-            data = []
-            count = 1
-        child_element = prof.findChild('a')
-        if child_element is not None:
-            full_name = child_element.text.rsplit(' ', 1)
-            prof_url = url + child_element.get('href')
-            data.insert(0, full_name[0].strip())
-            data.insert(1, full_name[1].strip())
-            data.insert(3, prof_url.strip())
-        else:
-            data.insert(2, prof.text.replace('Department of Electrical and Software Engineering', '').strip())
-        count = count + 1
+    for prof_raw in soup.find("div", class_='row profiles').find_all('div', class_='text-chunk'):
+        prof_raw = prof_raw.find_all('p')
+        prof_url = url + prof_raw[0].a['href'].strip()
+        prof_name = prof_raw[0].a.text.rsplit(' ', 1)
+        prof_fname = prof_name[0].strip()
+        prof_lname = prof_name[1].strip()
+        position = prof_raw[1].text.replace('Department of Electrical and Software Engineering', '').strip()
+        database.append([prof_fname, prof_lname, position, prof_url])
 
     return pd.DataFrame(database, columns=['firstname', 'lastname', 'title', 'homepage'])
 
@@ -66,8 +57,8 @@ def get_prof_data(prof_url):
     :return: phone number and location of faculty from website
     """
     # email_pattern = re.compile(r"\w+@\w+.ca")
-    location_pattern = re.compile(r'\w+ ?\d+\w?')
-    phonenumber_pattern = re.compile(r'\d{3}[.-]\d{3}[.-]\d{4}')
+    # location_pattern = re.compile(r'\w+ ?\d+\w?')
+    # phonenumber_pattern = re.compile(r'\d{3}[.-]\d{3}[.-]\d{4}')
     phone_number = None
     location = None
     try:
@@ -76,10 +67,16 @@ def get_prof_data(prof_url):
     except requests.exceptions.RequestException as error:
         raise SystemExit(error)
     soup = BeautifulSoup(response.text, "html.parser")  # "lxml")
-    for prof_contact_info in soup.find("div", class_='col-md-8 contact-section').find_all('a'):
-        if re.match(phonenumber_pattern, prof_contact_info.text):
-            phone_number = prof_contact_info.text
-        elif re.match(location_pattern, prof_contact_info.text):
-            location = prof_contact_info.text
+    for prof_additional_info in soup.find("div", class_='col-md-8 contact-section').find_all('h4'):
+        if prof_additional_info.text == 'Phone':
+            phone_number = prof_additional_info.parent.a.text.strip()
+        elif prof_additional_info.text == 'Location':
+            location = prof_additional_info.parent.a.text.strip()
+
+    # for prof_contact_info in soup.find("div", class_='col-md-8 contact-section').find_all('a'):
+    #     if re.match(phonenumber_pattern, prof_contact_info.text):
+    #         phone_number = prof_contact_info.text
+    #     elif re.match(location_pattern, prof_contact_info.text):
+    #         location = prof_contact_info.text
 
     return phone_number, location
