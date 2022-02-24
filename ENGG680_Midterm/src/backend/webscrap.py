@@ -69,7 +69,16 @@ def get_prof_data(prof_url):
     soup = BeautifulSoup(response.text, "html.parser")  # "lxml")
     for prof_additional_info in soup.find("div", class_='col-md-8 contact-section').find_all('h4'):
         if prof_additional_info.text == 'Phone':
-            phone_number = prof_additional_info.parent.a.text.strip()
+            phone_number = ''
+            phone_number_list = prof_additional_info.parent.find_all('a')
+            if len(phone_number_list) > 1:
+                # prof have 2 contact numbers
+                for prof_phone in phone_number_list:
+                    phone_number = phone_number + prof_phone.text.strip() + ', '
+                phone_number = phone_number[:-2]
+            else:
+                # prof have only 1 contact numbers
+                phone_number = prof_additional_info.parent.a.text.strip()
         elif prof_additional_info.text == 'Location':
             location = prof_additional_info.parent.a.text.strip()
 
