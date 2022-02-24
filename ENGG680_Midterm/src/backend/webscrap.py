@@ -59,8 +59,8 @@ def get_prof_data(prof_url):
     # email_pattern = re.compile(r"\w+@\w+.ca")
     # location_pattern = re.compile(r'\w+ ?\d+\w?')
     # phonenumber_pattern = re.compile(r'\d{3}[.-]\d{3}[.-]\d{4}')
-    phone_number = None
-    location = None
+    phone_number = 'N/A'
+    location = 'N/A'
     try:
         response = requests.get(prof_url, timeout=20)
         response.raise_for_status()
