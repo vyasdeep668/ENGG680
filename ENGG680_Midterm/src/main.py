@@ -33,7 +33,7 @@ def main():
     df[['contact', 'location']] = pd.DataFrame(prof_additional_info_list)
     df.to_csv(path_or_buf='../data/uofc_prof.csv', index=True)
 
-    title_list = ['Assistant Professor', 'Professor', 'Senior Instructor', 'Instructor', 'Associate Professor']
+    title_list = ['Assistant Professor', 'Professor', 'Senior Instructor', 'Instructor', 'Associate Professor', 'Teaching Professor']
     for title in title_list:
         print(f'Number of {title}s:', df.loc[df["title"] == title]['firstname'].count())
 
