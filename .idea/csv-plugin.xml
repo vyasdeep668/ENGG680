@@ -10,6 +10,13 @@
             </Attribute>
           </value>
         </entry>
+        <entry key="\Assignments\Assignment_4\chicken.csv">
+          <value>
+            <Attribute>
+              <option name="separator" value="," />
+            </Attribute>
+          </value>
+        </entry>
         <entry key="\ENGG680_Midterm\data\uofc_prof.csv">
           <value>
             <Attribute>
