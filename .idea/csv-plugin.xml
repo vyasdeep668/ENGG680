@@ -24,6 +24,20 @@
             </Attribute>
           </value>
         </entry>
+        <entry key="\ENGG680_Project\Traffic_Incidents.csv">
+          <value>
+            <Attribute>
+              <option name="separator" value="," />
+            </Attribute>
+          </value>
+        </entry>
+        <entry key="\ENGG680_Project\weather.csv">
+          <value>
+            <Attribute>
+              <option name="separator" value="," />
+            </Attribute>
+          </value>
+        </entry>
       </map>
     </option>
   </component>
